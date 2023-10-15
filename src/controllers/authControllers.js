@@ -87,7 +87,8 @@ const authController = {
       if (!validatePassword) {
         return res.status(404).json({
           EC: -1,
-          data: "Password id invalid",
+          data: user,
+          message: "Mật khẩu sai!",
         });
       }
 
@@ -100,15 +101,16 @@ const authController = {
         //Remove password when login
         const { password, ...others } = user._doc;
 
-        const userWP = { ...others };
+        const infoUser = { ...others };
         res.status(200).json({
           EC: 0,
-          data: { userWP, accessToken, refreshToken },
+          data: { infoUser, accessToken, refreshToken },
         });
       }
     } catch (error) {
       res.status(500).json({
         EC: -2,
+        message: "Máy chủ lỗi!",
         data: error,
       });
     }
