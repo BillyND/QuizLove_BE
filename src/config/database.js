@@ -1,4 +1,4 @@
-require("dotenv").config(); //để sử dụng process env
+require("dotenv").config();
 const mongoose = require("mongoose");
 const dbState = [
   {
