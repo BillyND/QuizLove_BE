@@ -23,6 +23,8 @@ const authController = {
         username: req.body.username || "",
       });
 
+      console.log(">>>newUser:", newUser);
+
       // Save to DB
       const user = await newUser.save();
       res.status(200).json({
