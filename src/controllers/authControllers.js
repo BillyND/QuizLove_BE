@@ -23,7 +23,15 @@ const authController = {
         username: req.body.username || "",
       });
 
-      console.log(">>>newUser:", newUser);
+      const isExistUser = User.findOne({ email: req.body.email });
+
+      if (isExistUser) {
+        res.status(200).json({
+          EC: 1,
+          data: null,
+          message: "Tài khoản đã tồn tại",
+        });
+      }
 
       // Save to DB
       const user = await newUser.save();
