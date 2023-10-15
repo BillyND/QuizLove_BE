@@ -14,28 +14,29 @@ const authController = {
     try {
       // bcrypt
       const salt = await bcrypt.genSalt(10);
-      const hashed = await bcrypt.hash(req.body.password, salt);
+      const hashed = await bcrypt.hash(req?.body?.password, salt);
 
       // Create new user
-      const newUser = await new User({
-        email: req.body.email,
+      const newUser = {
+        email: req?.body?.email,
         password: hashed,
-        username: req.body.username || "",
-      });
+        username: req?.body?.username || "",
+      };
 
-      const isExistUser = User.findOne({ email: req.body.email });
+      const isExistUser = await User.findOne({ email: req?.body?.email });
 
-      if (isExistUser == {}) {
-        res.status(404).json({
+      // Check exist email
+      if (isExistUser) {
+        return res.status(404).json({
           EC: 1,
-          data: isExistUser,
           message: "Tài khoản đã tồn tại!",
         });
       }
 
       // Save to DB
-      const user = await newUser.save();
-      res.status(200).json({
+      const user = await User.create(newUser);
+
+      return res.status(200).json({
         EC: 0,
         data: user,
         message: "Đăng ký thành công!",
@@ -44,6 +45,7 @@ const authController = {
       res.status(500).json({
         EC: -2,
         data: error,
+        message: "Máy chủ lỗi!",
       });
     }
   },
@@ -68,7 +70,7 @@ const authController = {
       const user = await User.findOne({ email: req.body.email });
 
       // Check email
-      if (user == {}) {
+      if (!user) {
         return res.status(404).json({
           EC: -1,
           data: user,
