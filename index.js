@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
   res.send(">>> QuizLove api is running");
 });
 
-// ROUTES
+// Routes
 app.use("/v1/api/auth", authRouter);
 
 // Connect to DB

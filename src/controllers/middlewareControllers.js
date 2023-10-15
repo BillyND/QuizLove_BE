@@ -9,7 +9,7 @@ const middlewareControllers = {
 
     const accessToken = token.split(" ")[1];
     if (accessToken) {
-      //Create token
+      // Create token
       jwt.verify(accessToken, keyAccessToken, (err, user) => {
         if (err) {
           res.status(401).json("Token is expired");
@@ -25,7 +25,7 @@ const middlewareControllers = {
     }
   },
 
-  //Check is admin account
+  // Check is admin account
   verifyTokenAndAuthorization: (req, res, next) => {
     middlewareControllers.verifyToken(req, res, () => {
       if (req.user.id == req.params.id || req.user.isAdmin) {

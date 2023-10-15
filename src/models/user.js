@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
-// mongoose.set("strictQuery", false);
 const userSchema = new mongoose.Schema(
   {
     email: {

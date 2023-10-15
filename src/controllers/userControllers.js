@@ -1,8 +1,7 @@
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
 
 const userController = {
-  //GET ALL USERS
+  // Get all users
   getAllUsers: async (req, res) => {
     console.log("req.user>>>", req.user);
     try {
@@ -19,13 +18,13 @@ const userController = {
     }
   },
 
-  //DELETE USER
+  // Delete a user
   deleteUser: async (req, res) => {
     try {
       const user = await User.findById(req.params.id);
       res.status(200).json({
         EC: 0,
-        data: "delete successfully",
+        data: "Delete successfully",
       });
     } catch (error) {
       res.status(500).json({

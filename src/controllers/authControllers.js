@@ -9,21 +9,21 @@ require("dotenv").config();
 
 let refreshTokens = [];
 const authController = {
-  //REGISTER
+  // Register
   registerUser: async (req, res) => {
     try {
-      //bcrypt
+      // bcrypt
       const salt = await bcrypt.genSalt(10);
       const hashed = await bcrypt.hash(req.body.password, salt);
 
-      //Create new user
+      // Create new user
       const newUser = await new User({
         email: req.body.email,
         password: hashed,
         phone: req.body.phone,
       });
 
-      //Save to DB
+      // Save to DB
       const user = await newUser.save();
       res.status(200).json({
         EC: 0,
@@ -37,34 +37,34 @@ const authController = {
     }
   },
 
-  //GENERATE ACCESS TOKEN
+  //Generate access token
   generateAccessToken: (user) => {
     return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, keyAccessToken, {
       expiresIn: accessTokenExpire,
     });
   },
 
-  //GENERATE REFRESH TOKEN
+  // Generate refresh token
   generateRefreshToken: (user) => {
     return jwt.sign({ id: user.id, isAdmin: user.isAdmin }, keyRefreshToken, {
       expiresIn: refreshTokenExpire,
     });
   },
 
-  // LOGIN
+  // Login
   loginUser: async (req, res) => {
     try {
       const user = await User.findOne({ email: req.body.email });
 
-      //Check email
+      // Check email
       if (!user) {
         return res.status(404).json({
           EC: -1,
-          data: "Invalid info Login",
+          data: "Not found email",
         });
       }
 
-      //Check password
+      // Check password
       const validatePassword = await bcrypt.compare(
         req.body.password,
         user.password
@@ -73,7 +73,7 @@ const authController = {
       if (!validatePassword) {
         return res.status(404).json({
           EC: -1,
-          data: "Invalid info Login",
+          data: "Password id invalid",
         });
       }
 
@@ -100,10 +100,10 @@ const authController = {
     }
   },
 
-  //TEST REFRESH TOKEN
+  // Test refresh token
   requestRefreshToken: async (req, res) => {
     if (req.body.refreshLocal === null) {
-      return res.status(200).json({ EC: 1, data: "Null refresh token" });
+      return res.status(200).json({ EC: 1, data: "Refresh token is expired" });
     }
     const refreshToken = req.body.refreshLocal;
     jwt.verify(refreshToken, keyRefreshToken, (err, user) => {
@@ -114,7 +114,7 @@ const authController = {
       }
       refreshTokens = refreshTokens.filter((token) => token != refreshToken);
 
-      //create new access and refresh Token
+      // Create new access token/refresh Token
       const newAccessToken = authController.generateAccessToken(user);
       const newRefreshToken = authController.generateRefreshToken(user);
 
@@ -130,7 +130,7 @@ const authController = {
     });
   },
 
-  //LOGOUT
+  // Logout
   logoutUser: async (req, res) => {
     return res.status(200).json({
       EC: 0,
@@ -138,11 +138,11 @@ const authController = {
     });
   },
 
-  //FETCH ACCOUNT
+  // Fetch account
   fetchAccount: async (req, res) => {
     try {
-      const userFullInfor = await User.findById(req.user.id);
-      const { password, ...others } = userFullInfor._doc;
+      const userFullInfo = await User.findById(req.user.id);
+      const { password, ...others } = userFullInfo._doc;
       const user = { ...others };
       res.status(200).json({
         EC: 0,
