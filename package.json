@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js"
   },
-  "author": "toni",
+  "author": "billy",
   "license": "ISC",
   "dependencies": {
     "api-query-params": "^5.4.0",
