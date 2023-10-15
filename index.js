@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send("QuizLove aoi is running");
+  res.send(">>> QuizLove api is running");
 });
 
 // ROUTES
