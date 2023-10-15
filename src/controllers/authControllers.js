@@ -25,7 +25,7 @@ const authController = {
 
       const isExistUser = User.findOne({ email: req.body.email });
 
-      if (JSON.stringify(isExistUser) === "{}") {
+      if (isExistUser == {}) {
         res.status(404).json({
           EC: 1,
           data: isExistUser,
@@ -68,7 +68,7 @@ const authController = {
       const user = await User.findOne({ email: req.body.email });
 
       // Check email
-      if (JSON.stringify(user) === "{}") {
+      if (user == {}) {
         return res.status(404).json({
           EC: -1,
           data: user,
