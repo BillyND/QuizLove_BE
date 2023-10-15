@@ -25,8 +25,8 @@ const authController = {
 
       const isExistUser = User.findOne({ email: req.body.email });
 
-      if (isExistUser) {
-        res.status(200).json({
+      if (JSON.stringify(isExistUser) === "{}") {
+        res.status(404).json({
           EC: 1,
           data: isExistUser,
           message: "Tài khoản đã tồn tại!",
@@ -68,10 +68,11 @@ const authController = {
       const user = await User.findOne({ email: req.body.email });
 
       // Check email
-      if (!user) {
+      if (JSON.stringify(user) === "{}") {
         return res.status(404).json({
           EC: -1,
-          data: "Not found email",
+          data: user,
+          message: "Tài khoản không tồn tại!",
         });
       }
 
