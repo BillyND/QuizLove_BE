@@ -28,8 +28,8 @@ const authController = {
       if (isExistUser) {
         res.status(200).json({
           EC: 1,
-          data: null,
-          message: "Tài khoản đã tồn tại",
+          data: isExistUser,
+          message: "Tài khoản đã tồn tại!",
         });
       }
 
@@ -38,6 +38,7 @@ const authController = {
       res.status(200).json({
         EC: 0,
         data: user,
+        message: "Đăng ký thành công!",
       });
     } catch (error) {
       res.status(500).json({
