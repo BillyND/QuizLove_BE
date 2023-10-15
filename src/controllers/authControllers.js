@@ -20,7 +20,7 @@ const authController = {
       const newUser = await new User({
         email: req.body.email,
         password: hashed,
-        phone: req.body.phone,
+        username: req.body.username || "",
       });
 
       // Save to DB
