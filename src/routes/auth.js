@@ -2,23 +2,23 @@ const authRouter = require("express").Router();
 const authController = require("../controllers/authControllers");
 const middlewareControllers = require("../controllers/middlewareControllers");
 
-//REGISTER
+// Register
 authRouter.post("/register", authController.registerUser);
 
-//LOGIN
+// Login
 authRouter.post("/login", authController.loginUser);
 
-//REFRESH TOKEN
+// Refresh token
 authRouter.post("/refresh", authController.requestRefreshToken);
 
-//LOG OUT
+// Logout
 authRouter.post(
   "/logout",
   middlewareControllers.verifyToken,
   authController.logoutUser
 );
 
-//LOGIN
+// Login
 authRouter.get(
   "/account",
   middlewareControllers.verifyToken,

@@ -5,17 +5,14 @@ const keyAccessToken = process.env.JWT_ACCESS_KEY;
 const middlewareControllers = {
   // Verify token
   verifyToken: (req, res, next) => {
-    // console.log("req.headers verify>> ", req.headers["authorization"]);
     const token = req.headers["authorization"];
-    //bearer 1235664 =>accesstoken = 123456
+
     const accessToken = token.split(" ")[1];
     if (accessToken) {
-      //tạo token dùng sign, xác thực dùng verify
+      //Create token
       jwt.verify(accessToken, keyAccessToken, (err, user) => {
         if (err) {
-          res
-            .status(401)
-            .json("Token đã hết hạn cần Refresh Token hoặc = null");
+          res.status(401).json("Token is expired");
           return;
         }
         req.user = user;
@@ -23,30 +20,29 @@ const middlewareControllers = {
         next();
       });
     } else {
-      res.status(403).json("Không thấy có Token");
+      res.status(403).json("Null token");
       return;
     }
   },
 
-  //Xác thực token và kiểm tra tài khoản là user hay admin
+  //Check is admin account
   verifyTokenAndAuthorization: (req, res, next) => {
     middlewareControllers.verifyToken(req, res, () => {
-      //if => xác nhận id chính chủ hoặc admin thì tiếp tục công việc tiếp theo
       if (req.user.id == req.params.id || req.user.isAdmin) {
         next();
       } else {
-        res.status(403).json("You are not alowed to do that!");
+        res.status(403).json("You are not allowed to do that!");
       }
     });
   },
 
-  // Xác thực token và Admin
+  // Check token admin
   verifyTokenAndAdmin: (req, res, next) => {
     middlewareControllers.verifyToken(req, res, () => {
       if (req.user.isAdmin) {
         next();
       } else {
-        res.status(403).json("You are not alowed to do that!");
+        res.status(403).json("You are not allowed to do that!");
       }
     });
   },

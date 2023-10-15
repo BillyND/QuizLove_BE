@@ -17,13 +17,11 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Khai báo routes khi vercel
 app.get("/", (req, res) => {
-  res.send("test");
+  res.send("QuizLove aoi is running");
 });
 
 // ROUTES
-
 app.use("/v1/api/auth", authRouter);
 
 // Connect to DB
