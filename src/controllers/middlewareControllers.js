@@ -9,7 +9,6 @@ const middlewareControllers = {
 
     const accessToken = token?.split(" ")[1];
 
-    console.log(">>>token:", token);
     if (accessToken) {
       // Create token
       jwt.verify(accessToken, keyAccessToken, (err, user) => {
@@ -18,7 +17,6 @@ const middlewareControllers = {
           return;
         }
         req.user = user;
-        console.log("user>>> ", user);
         next();
       });
     } else {
@@ -30,6 +28,10 @@ const middlewareControllers = {
   // Check is admin account
   verifyTokenAndAuthorization: (req, res, next) => {
     middlewareControllers.verifyToken(req, res, () => {
+      // console.log("user>>> ", user);
+      console.log("req.id>>> ", req.user.id);
+      console.log("req.id2>>> ", req.params.id);
+
       if (req.user.id == req.params.id || req.user.isAdmin) {
         next();
       } else {
