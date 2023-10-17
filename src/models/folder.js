@@ -13,9 +13,6 @@ const folderSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    lastModified: {
-      type: String,
-    },
     isHidden: {
       type: Boolean,
       default: false,
@@ -23,6 +20,9 @@ const folderSchema = new mongoose.Schema(
     isDeleted: {
       type: Boolean,
       default: false,
+    },
+    deletedAt: {
+      type: Date,
     },
   },
   { timestamps: true }

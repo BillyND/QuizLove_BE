@@ -24,10 +24,17 @@ folderRouter.post(
 );
 
 //Delete Folder
-folderRouter.delete(
-  "/:id",
-  middlewareControllers.verifyTokenAndAuthorization,
-  folderController.deleteFolder
+folderRouter.post(
+  "/delete/:id",
+  middlewareControllers.verifyToken,
+  folderController.deleteOrRestoreFolder
+);
+
+//Update Folder
+folderRouter.patch(
+  "/update/:id",
+  middlewareControllers.verifyToken,
+  folderController.updateFolder
 );
 
 module.exports = folderRouter;

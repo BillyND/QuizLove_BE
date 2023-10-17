@@ -1,4 +1,5 @@
 const Folder = require("../models/folder");
+const { paginateArray } = require("../services/paginateArray");
 
 const folderController = {
   // Get all folders
@@ -20,18 +21,37 @@ const folderController = {
   // Get folder by condition
   getFoldersByCondition: async (req, res) => {
     try {
-      const isDeleted = JSON.parse(req?.query?.filters?.isDeleted);
-      const isHidden = JSON.parse(req?.query?.filters?.isHidden);
+      const isDeleted = req?.query?.isDeleted;
+      const isHidden = req?.query?.isHidden;
+      const include = req?.query?.include;
+      const page = req?.query?.page;
+      const limit = req?.query?.limit;
 
-      const listFolders = await Folder.find({ personId: req?.user?.id });
+      let listFolders = await Folder.find({ personId: req?.user?.id });
 
-      const filteredFolders = listFolders
-        .filter((item) => item?.isHidden === isHidden)
-        ?.filter((item) => item?.isDeleted === isDeleted);
+      // Filter by isDeleted
+      if (isDeleted) {
+        listFolders = listFolders?.filter(
+          (item) => JSON.stringify(item?.isDeleted) === isDeleted
+        );
+      }
+
+      // Filter by isHidden
+      if (isHidden) {
+        listFolders = listFolders?.filter(
+          (item) => JSON.stringify(item?.isHidden) === isHidden
+        );
+      }
+
+      // Filter by page&limit
+      if (page && limit) {
+        listFolders = paginateArray(listFolders, page, limit);
+      }
 
       res.status(200).json({
         EC: 0,
-        data: filteredFolders,
+        totalItem: listFolders?.length,
+        data: listFolders,
         message: "Get folders by condition successfully",
       });
     } catch (error) {
@@ -68,17 +88,78 @@ const folderController = {
   },
 
   // Delete a folder
-  deleteFolder: async (req, res) => {
+  deleteOrRestoreFolder: async (req, res) => {
     try {
-      const folder = await Folder.findById(req.params.id);
+      const idFolder = req?.params?.id;
+      const isDeleted = req?.body?.isDeleted;
+      const updateData = {
+        isDeleted: isDeleted,
+        deletedAt: isDeleted ? new Date() : null,
+      };
+      let foundedFolderDelete = await Folder.findById(idFolder);
+      const { personId: personIdFounded } = foundedFolderDelete;
+      const { id: personId } = req?.user;
+
+      if (personId !== personIdFounded) {
+        res.status(500).json({
+          EC: 1,
+          message: "Don't own this folder!",
+          data: null,
+        });
+      }
+
+      foundedFolderDelete.isDeleted = updateData?.isDeleted;
+      foundedFolderDelete.deletedAt = updateData?.deletedAt;
+
+      await Folder.updateOne({ _id: idFolder }, updateData);
+
       res.status(200).json({
         EC: 0,
-        data: "Delete successfully",
+        data: foundedFolderDelete,
+        message: "Delete successfully!",
       });
     } catch (error) {
       res.status(500).json({
         EC: 1,
         data: error,
+      });
+    }
+  },
+
+  // Update a folder
+  updateFolder: async (req, res) => {
+    try {
+      const folderId = req?.params?.id;
+
+      const updateData = {
+        name: req?.body?.name,
+        description: req?.body?.description,
+      };
+
+      const foundedFolderDelete = await Folder.findById(folderId);
+      const { personId: personIdFounded } = foundedFolderDelete;
+      const { id: personId } = req?.user;
+
+      if (personId !== personIdFounded) {
+        res.status(500).json({
+          EC: 1,
+          message: "Don't own this folder!",
+          data: null,
+        });
+      }
+
+      await Folder.updateOne({ _id: folderId }, updateData);
+
+      res.status(200).json({
+        EC: 0,
+        data: updateData,
+        message: "Update successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        EC: 1,
+        err: error,
+        message: "Server error!",
       });
     }
   },
