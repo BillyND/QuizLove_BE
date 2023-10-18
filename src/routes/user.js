@@ -5,7 +5,7 @@ const userRouter = require("express").Router();
 //Get All Users
 userRouter.get(
   "/",
-  middlewareControllers.verifyTokenAndAdmin,
+  // middlewareControllers.verifyTokenAndAdmin,
   userController.getAllUsers
 );
 

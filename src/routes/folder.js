@@ -9,7 +9,7 @@ folderRouter.get(
   folderController.getAllFolders
 );
 
-//Get Folder by user
+//Get Folder by condition
 folderRouter.get(
   "/",
   middlewareControllers.verifyToken,

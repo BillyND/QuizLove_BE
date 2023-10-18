@@ -31,5 +31,6 @@ const folderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 const Folder = mongoose.model("folder", folderSchema);
 module.exports = Folder;

@@ -1,4 +1,5 @@
 const Folder = require("../models/folder");
+const User = require("../models/user");
 const { paginateArray } = require("../services/paginateArray");
 
 const folderController = {
@@ -23,11 +24,14 @@ const folderController = {
     try {
       const isDeleted = req?.query?.isDeleted;
       const isHidden = req?.query?.isHidden;
-      const include = req?.query?.include;
       const page = req?.query?.page;
       const limit = req?.query?.limit;
+      const folderId = req?.query?.folderId;
 
       let listFolders = await Folder.find({ personId: req?.user?.id });
+      let authorInfo = await User.find({});
+
+      console.log(">>>listFolders:", authorInfo);
 
       // Filter by isDeleted
       if (isDeleted) {
@@ -47,6 +51,17 @@ const folderController = {
       if (page && limit) {
         listFolders = paginateArray(listFolders, page, limit);
       }
+
+      // Filter by folderId
+      if (folderId) {
+        const folderIdFounded = listFolders?.find(
+          (item) => JSON.stringify(item?._id) === JSON.stringify(folderId)
+        );
+
+        listFolders = folderIdFounded ? [folderIdFounded] : [];
+      }
+
+      // listFolders = listFolders?.map((item) => (item.author = req.user));
 
       res.status(200).json({
         EC: 0,
