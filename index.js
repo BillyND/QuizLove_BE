@@ -21,7 +21,14 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send({
     EC: 0,
-    message: ">>> QuizLove api is running",
+    message: "<=== QuizLove api is running ===>",
+  });
+});
+
+app.get("/v1/api/trigger", (req, res) => {
+  res.send({
+    EC: 0,
+    message: "<=== Trigger api successfully! ===>",
   });
 });
 
