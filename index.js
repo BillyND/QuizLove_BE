@@ -19,7 +19,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send(">>> QuizLove api is running");
+  res.send({
+    EC: 0,
+    message: ">>> QuizLove api is running",
+  });
 });
 
 // Routes

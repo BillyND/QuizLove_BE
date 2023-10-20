@@ -31,8 +31,6 @@ const folderController = {
       let listFolders = await Folder.find({ personId: req?.user?.id });
       let authorInfo = await User.find({});
 
-      console.log(">>>listFolders:", authorInfo);
-
       // Filter by isDeleted
       if (isDeleted) {
         listFolders = listFolders?.filter(
@@ -52,16 +50,18 @@ const folderController = {
         listFolders = paginateArray(listFolders, page, limit);
       }
 
-      // Filter by folderId
-      if (folderId) {
-        const folderIdFounded = listFolders?.find(
-          (item) => JSON.stringify(item?._id) === JSON.stringify(folderId)
-        );
+      try {
+        // Filter by folderId
+        if (JSON.parse(folderId)) {
+          const folderIdFounded = listFolders?.find(
+            (item) => JSON.stringify(item?._id) === JSON.stringify(folderId)
+          );
 
-        listFolders = folderIdFounded ? [folderIdFounded] : [];
+          listFolders = folderIdFounded ? [folderIdFounded] : [];
+        }
+      } catch (error) {
+        console.error(error);
       }
-
-      // listFolders = listFolders?.map((item) => (item.author = req.user));
 
       res.status(200).json({
         EC: 0,
