@@ -25,6 +25,30 @@ const middlewareControllers = {
     }
   },
 
+  // Verify token folder
+  verifyTokenFolder: (req, res, next) => {
+    const token = req.headers["authorization"];
+
+    const accessToken = token?.split(" ")[1];
+
+    if (accessToken) {
+      // Create token
+      jwt.verify(accessToken, keyAccessToken, (err, user) => {
+        // if (err) {
+        //   res.status(401).json("Token is expired");
+        // }
+        req.user = user;
+      });
+      next();
+      return;
+    } else {
+      // res.status(403).json("Null token");
+      req.user = user;
+      next();
+      return;
+    }
+  },
+
   // Check is admin account
   verifyTokenAndAuthorization: (req, res, next) => {
     middlewareControllers.verifyToken(req, res, () => {

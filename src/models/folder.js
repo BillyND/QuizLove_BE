@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const folderSchema = new mongoose.Schema(
   {
-    personId: {
-      type: String,
+    author: {
+      type: JSON,
       required: true,
     },
     name: {

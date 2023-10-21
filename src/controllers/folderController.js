@@ -27,41 +27,39 @@ const folderController = {
       const page = req?.query?.page;
       const limit = req?.query?.limit;
       const folderId = req?.query?.folderId;
+      const hasAuthorId = req?.query?.hasAuthorId;
 
-      let listFolders = await Folder.find({ personId: req?.user?.id });
-      let authorInfo = await User.find({});
+      let listFolders = await Folder.find({});
+
+      // Filter by authorId
+      if (JSON.parse(hasAuthorId)) {
+        listFolders = listFolders?.filter(
+          (item) =>
+            JSON.stringify(item?.author?._id) === JSON.stringify(req?.user.id)
+        );
+      }
+
+      // Filter by folderId
+      if (folderId) {
+        let folderIdFounded = listFolders?.find(
+          (item) => JSON.stringify(item?._id) === JSON.stringify(folderId)
+        );
+
+        listFolders = folderIdFounded ? [folderIdFounded] : [];
+      }
 
       // Filter by isDeleted
-      if (isDeleted) {
-        listFolders = listFolders?.filter(
-          (item) => JSON.stringify(item?.isDeleted) === isDeleted
-        );
-      }
+      listFolders = listFolders?.filter(
+        (item) => JSON.stringify(item?.isDeleted) === isDeleted
+      );
 
       // Filter by isHidden
-      if (isHidden) {
-        listFolders = listFolders?.filter(
-          (item) => JSON.stringify(item?.isHidden) === isHidden
-        );
-      }
+      listFolders = listFolders?.filter(
+        (item) => JSON.stringify(item?.isHidden) === isHidden
+      );
 
       // Filter by page&limit
-      if (page && limit) {
-        listFolders = paginateArray(listFolders, page, limit);
-      }
-
-      try {
-        // Filter by folderId
-        if (JSON.parse(folderId)) {
-          const folderIdFounded = listFolders?.find(
-            (item) => JSON.stringify(item?._id) === JSON.stringify(folderId)
-          );
-
-          listFolders = folderIdFounded ? [folderIdFounded] : [];
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      listFolders = paginateArray(listFolders, page, limit);
 
       res.status(200).json({
         EC: 0,
@@ -80,11 +78,18 @@ const folderController = {
   // Create a folder
   createFolder: async (req, res) => {
     try {
+      let authorFolders = await User.findById(req?.user?.id);
+
       const newData = {
-        personId: req?.user?.id,
+        author: {
+          _id: authorFolders?._id,
+          email: authorFolders?.email,
+          username: authorFolders?.username,
+        },
         name: req?.body?.name,
         description: req?.body?.description,
       };
+      console.log(newData);
 
       const resCreateFolder = await Folder.create(newData);
 
