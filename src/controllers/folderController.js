@@ -85,6 +85,7 @@ const folderController = {
           _id: authorFolders?._id,
           email: authorFolders?.email,
           username: authorFolders?.username,
+          avatar: authorFolders?.avatar,
         },
         name: req?.body?.name,
         description: req?.body?.description,
