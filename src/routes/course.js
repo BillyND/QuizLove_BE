@@ -37,6 +37,13 @@ courseRouter.get(
   courseController.getDraftCourse
 );
 
+//Delete draft course
+courseRouter.delete(
+  "/draft",
+  middlewareControllers.verifyToken,
+  courseController.deleteDraftCourse
+);
+
 //Delete Course
 courseRouter.delete(
   "/:id",

@@ -180,6 +180,29 @@ const courseController = {
     }
   },
 
+  // Get draft course
+  deleteDraftCourse: async (req, res) => {
+    try {
+      let authorCourses = await User.findById(req?.user?.id);
+
+      let existDraftCourse = await DraftCourse.deleteOne({
+        "author.email": authorCourses?.email,
+      });
+
+      res.status(200).json({
+        EC: 0,
+        data: existDraftCourse,
+        message: "Delete draft course successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        EC: 1,
+        err: error?.errors,
+        message: "Server error!",
+      });
+    }
+  },
+
   // Delete a course
   deleteOrRestoreCourse: async (req, res) => {
     try {
