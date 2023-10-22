@@ -3,6 +3,9 @@ const authController = require("../controllers/authControllers");
 const middlewareControllers = require("../controllers/middlewareControllers");
 
 // Register
+authRouter.post("/check", middlewareControllers.verifyToken);
+
+// Register
 authRouter.post("/register", authController.registerUser);
 
 // Login

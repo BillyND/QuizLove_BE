@@ -18,21 +18,21 @@ folderRouter.get(
 
 //Create folder
 folderRouter.post(
-  "/create",
+  "/",
   middlewareControllers.verifyToken,
   folderController.createFolder
 );
 
 //Delete Folder
-folderRouter.post(
-  "/delete/:id",
+folderRouter.delete(
+  "/:id",
   middlewareControllers.verifyToken,
   folderController.deleteOrRestoreFolder
 );
 
 //Update Folder
 folderRouter.patch(
-  "/update/:id",
+  "/:id",
   middlewareControllers.verifyToken,
   folderController.updateFolder
 );

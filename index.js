@@ -5,6 +5,7 @@ const connection = require("./src/config/database");
 const authRouter = require("./src/routes/auth");
 const userRouter = require("./src/routes/user");
 const folderRouter = require("./src/routes/folder");
+const courseRouter = require("./src/routes/course");
 const cookieParser = require("cookie-parser");
 const app = express();
 
@@ -36,6 +37,7 @@ app.get("/v1/api/trigger", (req, res) => {
 app.use("/v1/api/auth", authRouter);
 app.use("/v1/api/user", userRouter);
 app.use("/v1/api/folders", folderRouter);
+app.use("/v1/api/courses", courseRouter);
 
 // Connect to DB
 (async () => {

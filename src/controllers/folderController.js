@@ -27,17 +27,11 @@ const folderController = {
       const page = req?.query?.page;
       const limit = req?.query?.limit;
       const folderId = req?.query?.folderId;
-      const hasAuthorId = req?.query?.hasAuthorId;
+      const emailAuthor = req?.query?.emailAuthor;
 
-      let listFolders = await Folder.find({});
-
-      // Filter by authorId
-      if (hasAuthorId?.includes("true/false") && JSON.parse(hasAuthorId)) {
-        listFolders = listFolders?.filter(
-          (item) =>
-            JSON.stringify(item?.author?._id) === JSON.stringify(req?.user.id)
-        );
-      }
+      let listFolders = await Folder.find({
+        "author.email": emailAuthor,
+      });
 
       // Filter by folderId
       if (folderId) {

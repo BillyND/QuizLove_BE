@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const courseSchema = new mongoose.Schema(
+const draftCourseSchema = new mongoose.Schema(
   {
     author: {
       type: JSON,
@@ -13,24 +13,14 @@ const courseSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    folderId: {
-      type: String,
-    },
     question: {
       type: Array,
       required: true,
       default: [],
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
-    deletedAt: {
-      type: Date,
-    },
   },
   { timestamps: true }
 );
 
-const Course = mongoose.model("course", courseSchema);
-module.exports = Course;
+const DraftCourse = mongoose.model("draftCourse", draftCourseSchema);
+module.exports = DraftCourse;
