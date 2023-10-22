@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 
-const courseSchema = new mongoose.Schema(
+const classSchema = new mongoose.Schema(
   {
-    folderId: {
-      type: String,
+    courseId: {
+      type: JSON,
       required: true,
     },
     name: {
       type: String,
       required: true,
+    },
+    school: {
+      type: String,
     },
     description: {
       type: String,
@@ -27,6 +30,5 @@ const courseSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-const Course = mongoose.model("course", courseSchema);
-module.exports = Course;
+const Class = mongoose.model("class", classSchema);
+module.exports = Class;

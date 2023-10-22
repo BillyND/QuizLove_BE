@@ -7,7 +7,14 @@ const middlewareControllers = {
   verifyToken: (req, res, next) => {
     const token = req.headers["authorization"];
 
+    console.log(">>>req:", req?.query);
+
     const accessToken = token?.split(" ")[1];
+
+    if (!JSON.parse(req?.query?.hasAuthorId)) {
+      next();
+      return;
+    }
 
     if (accessToken) {
       // Create token
@@ -21,30 +28,6 @@ const middlewareControllers = {
       });
     } else {
       res.status(403).json("Null token");
-      return;
-    }
-  },
-
-  // Verify token folder
-  verifyTokenFolder: (req, res, next) => {
-    const token = req.headers["authorization"];
-
-    const accessToken = token?.split(" ")[1];
-
-    if (accessToken) {
-      // Create token
-      jwt.verify(accessToken, keyAccessToken, (err, user) => {
-        // if (err) {
-        //   res.status(401).json("Token is expired");
-        // }
-        req.user = user;
-      });
-      next();
-      return;
-    } else {
-      // res.status(403).json("Null token");
-      req.user = user;
-      next();
       return;
     }
   },

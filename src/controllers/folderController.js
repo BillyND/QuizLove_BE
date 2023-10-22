@@ -61,6 +61,8 @@ const folderController = {
       // Filter by page&limit
       listFolders = paginateArray(listFolders, page, limit);
 
+      listFolders.reverse();
+
       res.status(200).json({
         EC: 0,
         totalItem: listFolders?.length,

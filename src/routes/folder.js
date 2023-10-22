@@ -12,7 +12,7 @@ folderRouter.get(
 //Get Folder by condition
 folderRouter.get(
   "/",
-  middlewareControllers.verifyTokenFolder,
+  middlewareControllers.verifyToken,
   folderController.getFoldersByCondition
 );
 
