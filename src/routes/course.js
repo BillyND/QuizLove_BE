@@ -23,11 +23,18 @@ courseRouter.post(
   courseController.createCourse
 );
 
-//Draft course
+//Update draft course
 courseRouter.post(
   "/draft",
   middlewareControllers.verifyToken,
-  courseController.createCourse
+  courseController.updateDraftCourse
+);
+
+//Draft course
+courseRouter.get(
+  "/draft",
+  middlewareControllers.verifyToken,
+  courseController.getDraftCourse
 );
 
 //Delete Course

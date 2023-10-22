@@ -4,18 +4,15 @@ const draftCourseSchema = new mongoose.Schema(
   {
     author: {
       type: JSON,
-      required: true,
     },
     title: {
       type: String,
-      required: true,
     },
     description: {
       type: String,
     },
-    question: {
+    questions: {
       type: Array,
-      required: true,
       default: [],
     },
   },

@@ -1,4 +1,5 @@
 const Course = require("../models/course");
+const DraftCourse = require("../models/draftCourse");
 const Question = require("../models/question");
 const User = require("../models/user");
 const { paginateArray } = require("../services/paginateArray");
@@ -78,8 +79,6 @@ const courseController = {
 
       const newQuestions = req?.body?.questions;
 
-      console.log(">>>user", req?.user);
-
       const newData = {
         author: {
           _id: authorCourses?._id,
@@ -111,12 +110,22 @@ const courseController = {
     }
   },
 
-  // Create a course
-  createCourse: async (req, res) => {
+  // Update draft course
+  updateDraftCourse: async (req, res) => {
     try {
       let authorCourses = await User.findById(req?.user?.id);
 
+      let existDraftCourse = await DraftCourse.find({
+        "author.email": authorCourses?.email,
+      });
+
       let newQuestions = req?.body?.questions;
+
+      newQuestions = newQuestions?.filter((item) => {
+        if (item?.question?.trim() || item?.answer?.trim()) {
+          return item;
+        }
+      });
 
       const newData = {
         author: {
@@ -127,24 +136,40 @@ const courseController = {
         },
         title: req?.body?.title,
         description: req?.body?.description,
+        questions: newQuestions,
       };
 
-      let resCreateCourse = await Course.create(newData);
-
-      newQuestions = newQuestions?.filter((item) => {
-        if (item?.question) {
-          return item;
-        }
-      });
-
-      newQuestions?.map((item) => (item.courseId = resCreateCourse?._id));
-
-      newQuestions?.length && (await Question.insertMany(newQuestions));
+      let resDraftCourse = !!existDraftCourse?.length
+        ? await DraftCourse.updateOne(newData)
+        : await DraftCourse.create(newData);
 
       res.status(200).json({
         EC: 0,
-        data: resCreateCourse,
-        message: "Create successfully",
+        data: resDraftCourse,
+        message: "Save draft course successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        EC: 1,
+        err: error?.errors,
+        message: "Server error!",
+      });
+    }
+  },
+
+  // Get draft course
+  getDraftCourse: async (req, res) => {
+    try {
+      let authorCourses = await User.findById(req?.user?.id);
+
+      let existDraftCourse = await DraftCourse.find({
+        "author.email": authorCourses?.email,
+      });
+
+      res.status(200).json({
+        EC: 0,
+        data: existDraftCourse,
+        message: "Get draft course successfully",
       });
     } catch (error) {
       res.status(500).json({
