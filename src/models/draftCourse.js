@@ -6,7 +6,7 @@ const draftCourseSchema = new mongoose.Schema(
       type: JSON,
       required: true,
     },
-    name: {
+    title: {
       type: String,
       required: true,
     },

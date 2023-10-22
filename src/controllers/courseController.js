@@ -116,9 +116,7 @@ const courseController = {
     try {
       let authorCourses = await User.findById(req?.user?.id);
 
-      const newQuestions = req?.body?.questions;
-
-      console.log(">>>user", req?.user);
+      let newQuestions = req?.body?.questions;
 
       const newData = {
         author: {
@@ -127,13 +125,19 @@ const courseController = {
           username: authorCourses?.username,
           avatar: authorCourses?.avatar,
         },
-        name: req?.body?.name,
+        title: req?.body?.title,
         description: req?.body?.description,
       };
 
       let resCreateCourse = await Course.create(newData);
 
-      newQuestions.map((item) => (item.courseId = resCreateCourse?._id));
+      newQuestions = newQuestions?.filter((item) => {
+        if (item?.question) {
+          return item;
+        }
+      });
+
+      newQuestions?.map((item) => (item.courseId = resCreateCourse?._id));
 
       newQuestions?.length && (await Question.insertMany(newQuestions));
 
