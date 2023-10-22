@@ -7,11 +7,12 @@ const middlewareControllers = {
   verifyToken: (req, res, next) => {
     const token = req.headers["authorization"];
 
-    console.log(">>>req:", req?.query);
-
     const accessToken = token?.split(" ")[1];
 
-    if (!JSON.parse(req?.query?.hasAuthorId)) {
+    if (
+      req?.query?.hasAuthorId?.includes("true/false") &&
+      !JSON.parse(req?.query?.hasAuthorId)
+    ) {
       next();
       return;
     }

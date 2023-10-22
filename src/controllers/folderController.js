@@ -32,7 +32,7 @@ const folderController = {
       let listFolders = await Folder.find({});
 
       // Filter by authorId
-      if (JSON.parse(hasAuthorId)) {
+      if (hasAuthorId?.includes("true/false") && JSON.parse(hasAuthorId)) {
         listFolders = listFolders?.filter(
           (item) =>
             JSON.stringify(item?.author?._id) === JSON.stringify(req?.user.id)
@@ -61,7 +61,7 @@ const folderController = {
       // Filter by page&limit
       listFolders = paginateArray(listFolders, page, limit);
 
-      listFolders.reverse();
+      listFolders?.reverse();
 
       res.status(200).json({
         EC: 0,
