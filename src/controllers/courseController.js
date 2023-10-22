@@ -74,40 +74,40 @@ const courseController = {
 
   // Create a course
   createCourse: async (req, res) => {
-    try {
-      let authorCourses = await User.findById(req?.user?.id);
+    // try {
+    let authorCourses = await User.findById(req?.user?.id);
 
-      const newQuestions = req?.body?.questions;
+    const newQuestions = req?.body?.questions;
 
-      const newData = {
-        author: {
-          _id: authorCourses?._id,
-          email: authorCourses?.email,
-          username: authorCourses?.username,
-          avatar: authorCourses?.avatar,
-        },
-        name: req?.body?.name,
-        description: req?.body?.description,
-      };
+    const newData = {
+      author: {
+        _id: authorCourses?._id,
+        email: authorCourses?.email,
+        username: authorCourses?.username,
+        avatar: authorCourses?.avatar,
+      },
+      title: req?.body?.title,
+      description: req?.body?.description,
+    };
 
-      let resCreateCourse = await Course.create(newData);
+    let resCreateCourse = await Course.create(newData);
 
-      newQuestions.map((item) => (item.courseId = resCreateCourse?._id));
+    newQuestions.map((item) => (item.courseId = resCreateCourse?._id));
 
-      newQuestions?.length && (await Question.insertMany(newQuestions));
+    newQuestions?.length && (await Question.insertMany(newQuestions));
 
-      res.status(200).json({
-        EC: 0,
-        data: resCreateCourse,
-        message: "Create successfully",
-      });
-    } catch (error) {
-      res.status(500).json({
-        EC: 1,
-        err: error?.errors,
-        message: "Server error!",
-      });
-    }
+    res.status(200).json({
+      EC: 0,
+      data: resCreateCourse,
+      message: "Create successfully",
+    });
+    // } catch (error) {
+    //   res.status(500).json({
+    //     EC: 1,
+    //     err: error?.errors,
+    //     message: "Server error!",
+    //   });
+    // }
   },
 
   // Update draft course
