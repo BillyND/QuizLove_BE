@@ -9,10 +9,7 @@ const middlewareControllers = {
 
     const accessToken = token?.split(" ")[1];
 
-    if (
-      req?.query?.hasAuthorId?.includes("true/false") &&
-      !JSON.parse(req?.query?.hasAuthorId)
-    ) {
+    if (req?.query?.emailAuthor) {
       next();
       return;
     }
