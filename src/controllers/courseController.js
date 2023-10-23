@@ -74,40 +74,47 @@ const courseController = {
 
   // Create a course
   createCourse: async (req, res) => {
-    // try {
-    let authorCourses = await User.findById(req?.user?.id);
+    try {
+      let authorCourses = await User.findById(req?.user?.id);
 
-    const newQuestions = req?.body?.questions;
+      let newQuestions = req?.body?.questions;
 
-    const newData = {
-      author: {
-        _id: authorCourses?._id,
-        email: authorCourses?.email,
-        username: authorCourses?.username,
-        avatar: authorCourses?.avatar,
-      },
-      title: req?.body?.title,
-      description: req?.body?.description,
-    };
+      const newData = {
+        author: {
+          _id: authorCourses?._id,
+          email: authorCourses?.email,
+          username: authorCourses?.username,
+          avatar: authorCourses?.avatar,
+        },
+        title: req?.body?.title,
+        description: req?.body?.description,
+        image: req?.body?.image,
+      };
 
-    let resCreateCourse = await Course.create(newData);
+      const resCreateCourse = await Course.create(newData);
 
-    newQuestions.map((item) => (item.courseId = resCreateCourse?._id));
+      newQuestions = newQuestions.map((item) => {
+        let newItem = {};
+        newItem.courseId = resCreateCourse?._id;
+        newItem.question = item.question;
+        newItem.answer = item.answer;
+        return newItem;
+      });
 
-    newQuestions?.length && (await Question.insertMany(newQuestions));
+      newQuestions?.length && (await Question.insertMany(newQuestions));
 
-    res.status(200).json({
-      EC: 0,
-      data: resCreateCourse,
-      message: "Create successfully",
-    });
-    // } catch (error) {
-    //   res.status(500).json({
-    //     EC: 1,
-    //     err: error?.errors,
-    //     message: "Server error!",
-    //   });
-    // }
+      res.status(200).json({
+        EC: 0,
+        data: resCreateCourse,
+        message: "Create successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        EC: 1,
+        err: error?.errors,
+        message: "Server error!",
+      });
+    }
   },
 
   // Update draft course
@@ -165,6 +172,14 @@ const courseController = {
       let existDraftCourse = await DraftCourse.find({
         "author.email": authorCourses?.email,
       });
+
+      // existDraftCourse[0].questions = existDraftCourse?.[0]?.questions.filter(
+      //   (item) => {
+      //     if (item?.question?.trim() || item?.answer?.trim()) {
+      //       return item;
+      //     }
+      //   }
+      // );
 
       res.status(200).json({
         EC: 0,

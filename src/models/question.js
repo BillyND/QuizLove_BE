@@ -4,7 +4,6 @@ const questionSchema = new mongoose.Schema(
   {
     courseId: {
       type: String,
-      required: true,
     },
     question: {
       type: String,
