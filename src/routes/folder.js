@@ -27,7 +27,7 @@ folderRouter.post(
 folderRouter.delete(
   "/:id",
   middlewareControllers.verifyToken,
-  folderController.deleteOrRestoreFolder
+  folderController.deleteFolder
 );
 
 //Update Folder

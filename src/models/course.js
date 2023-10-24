@@ -13,9 +13,6 @@ const courseSchema = new mongoose.Schema(
     description: {
       type: String,
     },
-    folderId: {
-      type: String,
-    },
     questions: {
       type: Array,
       required: true,

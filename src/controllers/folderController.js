@@ -105,20 +105,21 @@ const folderController = {
   },
 
   // Delete a folder
-  deleteOrRestoreFolder: async (req, res) => {
+  deleteFolder: async (req, res) => {
     try {
       const idFolder = req?.params?.id;
-      const isDeleted = req?.body?.isDeleted;
       const updateData = {
-        isDeleted: isDeleted,
-        deletedAt: isDeleted ? new Date() : null,
+        isDeleted: true,
+        deletedAt: new Date(),
       };
       let foundedFolderDelete = await Folder.findById(idFolder);
-      const { personId: personIdFounded } = foundedFolderDelete;
+      const {
+        author: { _id: personIdFounded },
+      } = foundedFolderDelete;
       const { id: personId } = req?.user;
 
-      if (personId !== personIdFounded) {
-        res.status(500).json({
+      if (JSON.stringify(personId) !== JSON.stringify(personIdFounded)) {
+        return res.status(500).json({
           EC: 1,
           message: "Don't own this folder!",
           data: null,
@@ -154,17 +155,18 @@ const folderController = {
       };
 
       const foundedFolderDelete = await Folder.findById(folderId);
-      const { personId: personIdFounded } = foundedFolderDelete;
+      const {
+        author: { _id: personIdFounded },
+      } = foundedFolderDelete;
       const { id: personId } = req?.user;
 
-      if (personId !== personIdFounded) {
-        res.status(500).json({
+      if (JSON.stringify(personId) !== JSON.stringify(personIdFounded)) {
+        return res.status(500).json({
           EC: 1,
           message: "Don't own this folder!",
           data: null,
         });
       }
-
       await Folder.updateOne({ _id: folderId }, updateData);
 
       res.status(200).json({
