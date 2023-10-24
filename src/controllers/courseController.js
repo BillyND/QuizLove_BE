@@ -25,14 +25,16 @@ const courseController = {
   getCoursesByCondition: async (req, res) => {
     try {
       const isDeleted = req?.query?.isDeleted;
-      const page = req?.query?.page;
-      const limit = req?.query?.limit;
+      const page = req?.query?.page || 1;
+      const limit = req?.query?.limit || 100;
       const courseId = req?.query?.courseId;
       const emailAuthor = req?.query?.emailAuthor;
 
       let listCourses = await Course.find({
         "author.email": emailAuthor,
       });
+
+      console.log(">>>>emailAuthor:", emailAuthor);
 
       // Filter by courseId
       if (courseId) {
@@ -44,14 +46,12 @@ const courseController = {
       }
 
       // Filter by isDeleted
-      listCourses = listCourses?.filter(
-        (item) => JSON.stringify(item?.isDeleted) === isDeleted
-      );
 
-      // Filter by isHidden
-      listCourses = listCourses?.filter(
-        (item) => JSON.stringify(item?.isHidden) === isHidden
-      );
+      if ("true/false"?.includes(isDeleted)) {
+        listCourses = listCourses?.filter(
+          (item) => JSON.stringify(item?.isDeleted) === isDeleted
+        );
+      }
 
       // Filter by page&limit
       listCourses = paginateArray(listCourses, page, limit);

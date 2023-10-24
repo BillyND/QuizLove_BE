@@ -23,9 +23,8 @@ const folderController = {
   getFoldersByCondition: async (req, res) => {
     try {
       const isDeleted = req?.query?.isDeleted;
-      const isHidden = req?.query?.isHidden;
-      const page = req?.query?.page;
-      const limit = req?.query?.limit;
+      const page = req?.query?.page || 1;
+      const limit = req?.query?.limit || 100;
       const folderId = req?.query?.folderId;
       const emailAuthor = req?.query?.emailAuthor;
 
@@ -43,14 +42,11 @@ const folderController = {
       }
 
       // Filter by isDeleted
-      listFolders = listFolders?.filter(
-        (item) => JSON.stringify(item?.isDeleted) === isDeleted
-      );
-
-      // Filter by isHidden
-      listFolders = listFolders?.filter(
-        (item) => JSON.stringify(item?.isHidden) === isHidden
-      );
+      if ("true/false"?.includes(isDeleted)) {
+        listFolders = listFolders?.filter(
+          (item) => JSON.stringify(item?.isDeleted) === isDeleted
+        );
+      }
 
       // Filter by page&limit
       listFolders = paginateArray(listFolders, page, limit);
